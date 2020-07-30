@@ -4,6 +4,8 @@ class CreateClients < ActiveRecord::Migration[6.0]
       t.string :name
 
       t.datetime :created_at, null: false
+
+      t.index :name, unique: true
     end
   end
 end

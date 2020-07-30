@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2020_07_30_081302) do
   create_table "clients", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
+    t.index ["name"], name: "index_clients_on_name", unique: true
   end
 
 # Could not dump table "projects" because of following StandardError
