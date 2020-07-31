@@ -21,8 +21,9 @@ describe Acme::Projects do
     end
 
     describe '#update' do
+      let(:project) { create(:project) }
       let(:params) { { name: 'name', status: 'status' } }
-      let(:id) { 1 }
+      let(:id) { project.id }
 
       it do
         put "/api/projects/#{id}", params: params
@@ -33,12 +34,13 @@ describe Acme::Projects do
 
 
     describe '#delete' do
-      let(:params) { { name: 'name', status: 'status', client_id: 3, created_at: '12/13/2020' } }
+      let(:project) { create(:project) }
+      let(:id) { project.id }
 
       it do
-        post '/api/projects', params: params
+        delete "/api/projects/#{id}"
 
-        expect(response.body).to eq({ message: 'project created' }.to_json)
+        expect(response.body).to eq({ message: 'project deleted' }.to_json)
       end
     end
   end
