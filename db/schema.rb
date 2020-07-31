@@ -15,4 +15,19 @@ ActiveRecord::Schema.define(version: 2020_07_30_081302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "clients", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.index ["name"], name: "index_clients_on_name", unique: true
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_projects_on_client_id"
+  end
+
+  add_foreign_key "projects", "clients"
 end
