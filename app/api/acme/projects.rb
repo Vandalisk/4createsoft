@@ -8,20 +8,22 @@ module Acme
 
       desc 'Create a project.'
       params do
-        requires :name, type: String, desc: 'name'
-        requires :status, type: String, desc: 'status'
-        requires :created_at, type: String, desc: 'created_at'
-        requires :client_id, type: String, desc: 'client_id'
+        requires :project, type: Hash do
+          requires :name, type: String, desc: 'name'
+          requires :status, type: String, desc: 'status'
+          requires :created_at, type: String, desc: 'created_at'
+          requires :client_id, type: String, desc: 'client_id'
+        end
       end
-      # post { run!(Project::Create, request) }
-      post do
-        # authenticate!
-        # Project.create!({
-        #   user: current_user,
-        #   text: params[:status]
-        # })
-        { message: 'project created' }
-      end
+      post { Project::Create.(params[:project]) }
+      # post do
+      #   # authenticate!
+      #   # Project.create!({
+      #   #   user: current_user,
+      #   #   text: params[:status]
+      #   # })
+      #   { message: 'project created' }
+      # end
 
       desc 'Update a project.'
       params do

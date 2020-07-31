@@ -1,8 +1,10 @@
-# class Project::Contract::Create < Reform::Form
-#   property :name
-#   property :status
-#   property :created_at
-#   property :client_id
+module Project::Contract
+  class Create < Reform::Form
+    property :name
+    property :status
+    property :created_at
+    property :client_id
 
-#   validates :name, presence: true
-# end
+    validates :name, presence: true
+  end
+end

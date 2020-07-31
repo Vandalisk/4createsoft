@@ -11,7 +11,7 @@ describe Acme::Projects do
     end
 
     describe '#create' do
-      let(:params) { { name: 'name', status: 'status', client_id: 3, created_at: '12/13/2020' } }
+      let(:params) { { project: { name: 'name', status: 'status', client_id: 3, created_at: '12/13/2020' } } }
 
       it do
         post '/api/projects', params: params
