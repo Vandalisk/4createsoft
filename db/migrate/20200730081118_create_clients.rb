@@ -1,5 +1,5 @@
 class CreateClients < ActiveRecord::Migration[6.0]
-  def change
+  def up
     create_table :clients do |t|
       t.string :name
 
@@ -7,5 +7,9 @@ class CreateClients < ActiveRecord::Migration[6.0]
 
       t.index :name, unique: true
     end
+  end
+
+  def down
+    drop_table :clients
   end
 end

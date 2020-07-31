@@ -13,6 +13,7 @@ module Acme
         requires :created_at, type: String, desc: 'created_at'
         requires :client_id, type: String, desc: 'client_id'
       end
+      # post { run!(Project::Create, request) }
       post do
         # authenticate!
         # Project.create!({
