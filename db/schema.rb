@@ -21,8 +21,13 @@ ActiveRecord::Schema.define(version: 2020_07_30_081302) do
     t.index ["name"], name: "index_clients_on_name", unique: true
   end
 
-# Could not dump table "projects" because of following StandardError
-#   Unknown type 'project_status' for column 'status'
+  create_table "projects", force: :cascade do |t|
+    t.string "name"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_projects_on_client_id"
+  end
 
   add_foreign_key "projects", "clients"
 end

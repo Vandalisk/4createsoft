@@ -1,40 +1,70 @@
 module Acme
   class Projects < Grape::API
     namespace :projects do
-      desc 'Returns pong.'
+      desc 'Returns projects'
       get do
-        { ping: 'pong' }
+        result = Project::Index.()
+
+        if result.success?
+          { message: 'projects' }
+        else
+          { message: result['contract.default'].errors.messages }
+        end
+      end
+
+      desc 'Returns a project'
+      params do
+        requires :id, type: String, desc: 'ID'
+      end
+      get ':id' do
+        result = Project::Show.(params: { id: params[:id]})
+
+        if result.success?
+          { message: 'show project' }
+        else
+          { message: result['contract.default'].errors.messages }
+        end
       end
 
       desc 'Create a project.'
       params do
-        requires :name, type: String, desc: 'name'
-        requires :status, type: String, desc: 'status'
-        requires :created_at, type: String, desc: 'created_at'
-        requires :client_id, type: String, desc: 'client_id'
+        requires :project, type: Hash do
+          requires :name, type: String, desc: 'name'
+          requires :status, type: String, desc: 'status'
+          # requires :created_at, type: String, desc: 'created_at'
+          requires :client_id, type: String, desc: 'client_id'
+        end
       end
       post do
         # authenticate!
-        # Project.create!({
-        #   user: current_user,
-        #   text: params[:status]
-        # })
-        { message: 'project created' }
+
+        result = Project::Create.(params: params[:project])
+
+        if result.success?
+          { message: 'project created' }
+        else
+          { message: result['contract.default'].errors.messages }
+        end
       end
 
       desc 'Update a project.'
       params do
         requires :id, type: String, desc: 'ID'
-        optional :status, type: String, desc: 'status'
-        optional :name, type: String, desc: 'status'
+        requires :project, type: Hash do
+          optional :status, type: String, desc: 'status'
+          optional :name, type: String, desc: 'status'
+        end
       end
       put ':id' do
         # authenticate!
-        # current_user.statuses.find(params[:id]).update({
-        #   user: current_user,
-        #   text: params[:status]
-        # })
-        { message: 'project updated' }
+
+        result = Project::Update.(params: { id: params[:id], project: params[:project] })
+
+        if result.success?
+          { message: 'project updated' }
+        else
+          { message: result['contract.default'].errors.messages }
+        end
       end
 
       desc 'Delete a project.'
@@ -43,8 +73,14 @@ module Acme
       end
       delete ':id' do
         # authenticate!
-        # current_user.statuses.find(params[:id]).destroy
-        { message: 'project deleted' }
+
+        result = Project::Delete.(params: { id: params[:id] })
+
+        if result.success?
+          { message: 'project deleted' }
+        else
+          { message: result['contract.default'].errors.messages }
+        end
       end
     end
   end

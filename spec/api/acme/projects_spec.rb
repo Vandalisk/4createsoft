@@ -1,0 +1,56 @@
+require 'rails_helper'
+
+describe Acme::Projects do
+  context 'valid' do
+    let(:project) { create(:project) }
+
+    describe '#index' do
+      it do
+        get '/api/projects'
+
+        expect(response.body).to eq({ message: 'projects' }.to_json)
+      end
+    end
+
+    describe '#show' do
+      it do
+        get "/api/projects/#{project.id}"
+
+        expect(response.body).to eq({ message: 'show project' }.to_json)
+      end
+    end
+
+    describe '#create' do
+      let(:client) { create(:client) }
+      let(:params) { { project: { name: 'name', status: 'status', client_id: client.id } } }
+
+      it do
+        post '/api/projects', params: params
+
+        expect(response.body).to eq({ message: 'project created' }.to_json)
+      end
+    end
+
+    describe '#update' do
+      let(:params) { { project: { status: 'status' } } }
+
+      it do
+        put "/api/projects/#{project.id}", params: params
+
+        expect(response.body).to eq({ message: 'project updated' }.to_json)
+      end
+    end
+
+
+    describe '#delete' do
+      it do
+        delete "/api/projects/#{project.id}"
+
+        expect(response.body).to eq({ message: 'project deleted' }.to_json)
+      end
+    end
+  end
+
+  context 'invalid' do
+  end
+end
