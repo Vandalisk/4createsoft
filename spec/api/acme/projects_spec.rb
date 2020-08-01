@@ -2,16 +2,27 @@ require 'rails_helper'
 
 describe Acme::Projects do
   context 'valid' do
+    let(:project) { create(:project) }
+
     describe '#index' do
       it do
         get '/api/projects'
 
-        expect(response.body).to eq({ ping: 'pong' }.to_json)
+        expect(response.body).to eq({ message: 'projects' }.to_json)
+      end
+    end
+
+    describe '#show' do
+      it do
+        get "/api/projects/#{project.id}"
+
+        expect(response.body).to eq({ message: 'show project' }.to_json)
       end
     end
 
     describe '#create' do
-      let(:params) { { project: { name: 'name', status: 'status', client_id: 3, created_at: '12/13/2020' } } }
+      let(:client) { create(:client) }
+      let(:params) { { project: { name: 'name', status: 'status', client_id: client.id } } }
 
       it do
         post '/api/projects', params: params
@@ -21,12 +32,10 @@ describe Acme::Projects do
     end
 
     describe '#update' do
-      let(:project) { create(:project) }
-      let(:params) { { name: 'name', status: 'status' } }
-      let(:id) { project.id }
+      let(:params) { { project: { status: 'status' } } }
 
       it do
-        put "/api/projects/#{id}", params: params
+        put "/api/projects/#{project.id}", params: params
 
         expect(response.body).to eq({ message: 'project updated' }.to_json)
       end
@@ -34,11 +43,8 @@ describe Acme::Projects do
 
 
     describe '#delete' do
-      let(:project) { create(:project) }
-      let(:id) { project.id }
-
       it do
-        delete "/api/projects/#{id}"
+        delete "/api/projects/#{project.id}"
 
         expect(response.body).to eq({ message: 'project deleted' }.to_json)
       end
