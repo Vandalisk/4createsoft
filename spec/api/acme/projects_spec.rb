@@ -25,16 +25,6 @@ describe Acme::Projects do
       let(:params) { { project: project_params } }
       let(:project_params) { { name: 'name', status: 'status' } }
 
-      describe 'with client_id in params' do
-        let(:project_params) { super().merge(client_id: client.id) }
-
-        it do
-          post '/api/projects', params: params
-
-          expect(response.body).to eq({ message: 'project created' }.to_json)
-        end
-      end
-
       describe 'with client in params' do
         let(:project_params) { super().merge(client: { name: 'name' }) }
 
@@ -45,26 +35,9 @@ describe Acme::Projects do
         end
       end
 
-      describe 'with both client and client_id in params' do
-        let(:project_params) { super().merge(client_id: client.id, client: { name: 'name' }) }
+      describe 'without client in params' do
         let(:expected_message) do
-          { error: 'project[client_id], project[client] are mutually exclusive' }
-        end
-
-        it do
-          post '/api/projects', params: params
-
-          expect(response.body).to eq(expected_message.to_json)
-        end
-      end
-
-      describe 'neither client or client_id in params' do
-        let(:expected_message) do
-          {
-            error:
-              'project[client_id], project[client] are missing, ' \
-              'exactly one parameter must be provided'
-          }
+          { error: 'project[client] is missing, project[client][name] is missing' }
         end
 
         it do

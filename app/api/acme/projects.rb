@@ -32,12 +32,9 @@ module Acme
           requires :name, type: String, desc: 'name'
           requires :status, type: String, desc: 'status'
 
-          optional :client_id, type: String, desc: 'client_id'
-          optional :client, type: Hash do
+          requires :client, type: Hash do
             requires :name, type: String
           end
-
-          exactly_one_of :client_id, :client
         end
       end
       post do
