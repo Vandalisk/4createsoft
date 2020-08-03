@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Project::Show do
-  subject(:service) { described_class.call({ params: params }) }
+  let!(:client) { create(:client) }
+  let(:request_double) { double(headers: with_auth_headers(client)) }
+  subject(:service) { described_class.call({ request: request_double, params: params}) }
 
   context 'valid' do
     describe 'when id exists' do

@@ -2,11 +2,18 @@ require 'rails_helper'
 
 describe Acme::Projects do
   context 'valid' do
+    let(:client) { create(:client) }
     let(:project) { create(:project) }
+
+    def with_auth_headers
+      token =  Knock::AuthToken.new(payload: { sub: client.id }).token
+
+      { 'Authorization' => "Bearer #{token}" }
+    end
 
     describe '#index' do
       it do
-        get '/api/projects'
+        get '/api/projects', headers: with_auth_headers
 
         expect(response.body).to eq({ message: 'projects' }.to_json)
       end
@@ -14,22 +21,22 @@ describe Acme::Projects do
 
     describe '#show' do
       it do
-        get "/api/projects/#{project.id}"
+        get "/api/projects/#{project.id}", headers: with_auth_headers
 
         expect(response.body).to eq({ message: 'show project' }.to_json)
       end
     end
 
     describe '#create' do
-      let(:client) { create(:client) }
       let(:params) { { project: project_params } }
       let(:project_params) { { name: 'name', status: 'status' } }
+      let(:client_params) { FactoryBot.attributes_for(:client) }
 
       describe 'with client in params' do
-        let(:project_params) { super().merge(client: { name: 'name' }) }
+        let(:project_params) { super().merge(client: client_params) }
 
         it do
-          post '/api/projects', params: params
+          post '/api/projects', params: params, headers: with_auth_headers
 
           expect(response.body).to eq({ message: 'project created' }.to_json)
         end
@@ -41,7 +48,7 @@ describe Acme::Projects do
         end
 
         it do
-          post '/api/projects', params: params
+          post '/api/projects', params: params, headers: with_auth_headers
 
           expect(response.body).to eq(expected_message.to_json)
         end
@@ -52,7 +59,7 @@ describe Acme::Projects do
       let(:params) { { project: { status: 'status' } } }
 
       it do
-        put "/api/projects/#{project.id}", params: params
+        put "/api/projects/#{project.id}", params: params, headers: with_auth_headers
 
         expect(response.body).to eq({ message: 'project updated' }.to_json)
       end
@@ -61,7 +68,7 @@ describe Acme::Projects do
 
     describe '#delete' do
       it do
-        delete "/api/projects/#{project.id}"
+        delete "/api/projects/#{project.id}", headers: with_auth_headers
 
         expect(response.body).to eq({ message: 'project deleted' }.to_json)
       end

@@ -18,11 +18,18 @@ gem 'puma', '~> 4.1'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+gem 'pry'
+gem 'pry-nav'
+gem 'pry-rails'
+gem 'pry-remote'
+
 gem 'grape'
 gem 'config'
 gem 'trailblazer'
 gem 'trailblazer-rails'
 gem 'reform-rails'
+gem 'faker'
+gem 'knock', git: 'https://github.com/nsarno/knock', branch: 'master', ref: '9214cd027422df8dc31eb67c60032fbbf8fc100b'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

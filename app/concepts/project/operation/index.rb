@@ -1,3 +1,4 @@
-class Project::Index < Trailblazer::Operation
-  step -> (options, **) { options['model'] = Project.all }
+class Project::Index < Project::Base
+  step :authenticate!
+  step -> (options, **) { options['model'] = Project.where(client_id: options[:current_client].id) }
 end
