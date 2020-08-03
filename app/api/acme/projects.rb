@@ -31,8 +31,10 @@ module Acme
         requires :project, type: Hash do
           requires :name, type: String, desc: 'name'
           requires :status, type: String, desc: 'status'
-          # requires :created_at, type: String, desc: 'created_at'
-          requires :client_id, type: String, desc: 'client_id'
+
+          requires :client, type: Hash do
+            requires :name, type: String
+          end
         end
       end
       post do

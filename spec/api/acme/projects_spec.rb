@@ -22,12 +22,29 @@ describe Acme::Projects do
 
     describe '#create' do
       let(:client) { create(:client) }
-      let(:params) { { project: { name: 'name', status: 'status', client_id: client.id } } }
+      let(:params) { { project: project_params } }
+      let(:project_params) { { name: 'name', status: 'status' } }
 
-      it do
-        post '/api/projects', params: params
+      describe 'with client in params' do
+        let(:project_params) { super().merge(client: { name: 'name' }) }
 
-        expect(response.body).to eq({ message: 'project created' }.to_json)
+        it do
+          post '/api/projects', params: params
+
+          expect(response.body).to eq({ message: 'project created' }.to_json)
+        end
+      end
+
+      describe 'without client in params' do
+        let(:expected_message) do
+          { error: 'project[client] is missing, project[client][name] is missing' }
+        end
+
+        it do
+          post '/api/projects', params: params
+
+          expect(response.body).to eq(expected_message.to_json)
+        end
       end
     end
 
