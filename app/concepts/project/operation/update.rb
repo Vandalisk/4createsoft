@@ -1,4 +1,5 @@
-class Project::Update < Trailblazer::Operation
+class Project::Update < Project::Base
+  step :authenticate!
   step Model(Project, :find)
   step :update!
 

@@ -3,7 +3,7 @@ module Acme
     namespace :projects do
       desc 'Returns projects'
       get do
-        result = Project::Index.()
+        result = Project::Index.(request: request)
 
         if result.success?
           { message: 'projects' }
@@ -17,7 +17,7 @@ module Acme
         requires :id, type: String, desc: 'ID'
       end
       get ':id' do
-        result = Project::Show.(params: { id: params[:id]})
+        result = Project::Show.(request: request, params: { id: params[:id]})
 
         if result.success?
           { message: 'show project' }
@@ -40,7 +40,7 @@ module Acme
       post do
         # authenticate!
 
-        result = Project::Create.(params: params[:project])
+        result = Project::Create.(request: request, params: params[:project])
 
         if result.success?
           { message: 'project created' }
@@ -60,7 +60,7 @@ module Acme
       put ':id' do
         # authenticate!
 
-        result = Project::Update.(params: { id: params[:id], project: params[:project] })
+        result = Project::Update.(request: request, params: { id: params[:id], project: params[:project] })
 
         if result.success?
           { message: 'project updated' }
@@ -76,7 +76,7 @@ module Acme
       delete ':id' do
         # authenticate!
 
-        result = Project::Delete.(params: { id: params[:id] })
+        result = Project::Delete.(request: request, params: { id: params[:id] })
 
         if result.success?
           { message: 'project deleted' }
