@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 describe Project::Delete do
-  subject { described_class.call({ params: params}) }
+  let!(:client) { create(:client) }
+  let(:request_double) { double(headers: with_auth_headers(client)) }
+  subject { described_class.call({ request: request_double, params: params}) }
 
   context 'valid' do
     let(:params) { { id: project.id } }

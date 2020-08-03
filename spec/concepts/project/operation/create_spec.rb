@@ -1,14 +1,15 @@
 require 'rails_helper'
 
 describe Project::Create do
-  subject(:service) { described_class.call({ params: params }) }
+  let!(:client) { create(:client) }
+  let(:request_double) { double(headers: with_auth_headers(client)) }
+  subject(:service) { described_class.call({ request: request_double, params: params }) }
 
   describe 'valid' do
     context 'with existing client' do
       describe 'should create a project' do
-        let!(:client) { create(:client) }
         let(:project_params) { { name: 'name', status: 'status' } }
-        let(:client_params) { { name: client.name } }
+        let(:client_params) { { name: client, email: client.email } }
         let(:params) { project_params.merge(client: client_params) }
 
         it { expect(service.success?).to be_truthy }
@@ -29,7 +30,7 @@ describe Project::Create do
     context 'with new client' do
       describe 'should create a project' do
         let(:project_params) { { name: 'name', status: 'status' } }
-        let(:client_params) { { name: 'name' } }
+        let(:client_params) { FactoryBot.attributes_for(:client) }
         let(:params) { project_params.merge(client: client_params) }
 
         it { expect(service.success?).to be_truthy }

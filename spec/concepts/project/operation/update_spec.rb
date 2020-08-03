@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe Project::Update do
   describe 'valid' do
-    subject(:service) { described_class.call({ params: params }) }
+  let!(:client) { create(:client) }
+  let(:request_double) { double(headers: with_auth_headers(client)) }
+  subject(:service) { described_class.call({ request: request_double, params: params}) }
 
     describe 'should update a project' do
       let(:old_status) { 'old status' }

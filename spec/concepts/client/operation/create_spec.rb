@@ -5,7 +5,7 @@ describe Client::Create do
 
   describe 'valid' do
     describe 'should create a client' do
-      let(:params) { { name: 'name' } }
+      let(:params) { FactoryBot.attributes_for(:client) }
 
       it { expect(service.success?).to be_truthy }
       it { expect{ service }.to change { Client.count }.by(1) }
