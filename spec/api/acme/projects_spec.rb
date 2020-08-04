@@ -40,7 +40,7 @@ describe Acme::Projects do
 
       describe 'without client in params' do
         let(:expected_message) do
-          { error: 'project[client] is missing, project[client][name] is missing' }
+          { error: 'project[client] is missing, project[client][name] is missing, project[client][password] is missing' }
         end
 
         it do

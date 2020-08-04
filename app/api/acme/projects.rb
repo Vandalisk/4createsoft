@@ -33,6 +33,7 @@ module Acme
 
           requires :client, type: Hash do
             requires :name, type: String
+            requires :password, type: String
           end
         end
       end
