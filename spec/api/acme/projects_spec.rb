@@ -5,25 +5,21 @@ describe Acme::Projects do
     let(:client) { create(:client) }
     let(:project) { create(:project) }
 
-    def with_auth_headers
-      token =  Knock::AuthToken.new(payload: { sub: client.id }).token
-
-      { 'Authorization' => "Bearer #{token}" }
-    end
-
     describe '#index' do
-      it do
-        get '/api/projects', headers: with_auth_headers
+      let!(:project) { create(:project, client: client) }
 
-        expect(response.body).to eq({ message: 'projects' }.to_json)
+      it do
+        get '/api/projects', headers: with_auth_headers(client)
+
+        expect(response.body).to eq(::ProjectSerializer.new([project]).serialized_json)
       end
     end
 
     describe '#show' do
       it do
-        get "/api/projects/#{project.id}", headers: with_auth_headers
+        get "/api/projects/#{project.id}", headers: with_auth_headers(client)
 
-        expect(response.body).to eq({ message: 'show project' }.to_json)
+        expect(response.body).to eq(::ProjectSerializer.new(project).serialized_json)
       end
     end
 
@@ -36,9 +32,9 @@ describe Acme::Projects do
         let(:project_params) { super().merge(client: client_params) }
 
         it do
-          post '/api/projects', params: params, headers: with_auth_headers
+          post '/api/projects', params: params, headers: with_auth_headers(client)
 
-          expect(response.body).to eq({ message: 'project created' }.to_json)
+          expect(response.body).to eq(::ProjectSerializer.new(Project.last).serialized_json)
         end
       end
 
@@ -48,7 +44,7 @@ describe Acme::Projects do
         end
 
         it do
-          post '/api/projects', params: params, headers: with_auth_headers
+          post '/api/projects', params: params, headers: with_auth_headers(client)
 
           expect(response.body).to eq(expected_message.to_json)
         end
@@ -59,18 +55,18 @@ describe Acme::Projects do
       let(:params) { { project: { status: 'status' } } }
 
       it do
-        put "/api/projects/#{project.id}", params: params, headers: with_auth_headers
+        put "/api/projects/#{project.id}", params: params, headers: with_auth_headers(client)
 
-        expect(response.body).to eq({ message: 'project updated' }.to_json)
+        expect(response.body).to eq(::ProjectSerializer.new(project.reload).serialized_json)
       end
     end
 
 
     describe '#delete' do
       it do
-        delete "/api/projects/#{project.id}", headers: with_auth_headers
+        delete "/api/projects/#{project.id}", headers: with_auth_headers(client)
 
-        expect(response.body).to eq({ message: 'project deleted' }.to_json)
+        expect(response.body).to eq(::ProjectSerializer.new(project).serialized_json)
       end
     end
   end

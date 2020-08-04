@@ -4,9 +4,8 @@ module Acme
       desc 'Returns projects'
       get do
         result = Project::Index.(request: request)
-
         if result.success?
-          { message: 'projects' }
+          ::ProjectSerializer.new(result['model']).serializable_hash
         else
           { message: result['contract.default'].errors.messages }
         end
@@ -20,7 +19,7 @@ module Acme
         result = Project::Show.(request: request, params: { id: params[:id]})
 
         if result.success?
-          { message: 'show project' }
+          ::ProjectSerializer.new(result['model']).serializable_hash
         else
           { message: result['contract.default'].errors.messages }
         end
@@ -38,12 +37,10 @@ module Acme
         end
       end
       post do
-        # authenticate!
-
         result = Project::Create.(request: request, params: params[:project])
 
         if result.success?
-          { message: 'project created' }
+          ::ProjectSerializer.new(result['model']).serializable_hash
         else
           { message: result['contract.default'].errors.messages }
         end
@@ -58,12 +55,10 @@ module Acme
         end
       end
       put ':id' do
-        # authenticate!
-
         result = Project::Update.(request: request, params: { id: params[:id], project: params[:project] })
 
         if result.success?
-          { message: 'project updated' }
+          ::ProjectSerializer.new(result['model']).serializable_hash
         else
           { message: result['contract.default'].errors.messages }
         end
@@ -74,12 +69,10 @@ module Acme
         requires :id, type: String, desc: 'Status ID.'
       end
       delete ':id' do
-        # authenticate!
-
         result = Project::Delete.(request: request, params: { id: params[:id] })
 
         if result.success?
-          { message: 'project deleted' }
+          ::ProjectSerializer.new(result['model']).serializable_hash
         else
           { message: result['contract.default'].errors.messages }
         end
